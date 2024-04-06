@@ -5,6 +5,13 @@ namespace ChessLogic
     public class Board
     {
         private readonly Piece[,] pieces = new Piece[8, 8];
+
+        private readonly Dictionary<Player, Position> pawnSkipPosition = new()
+        {
+            { Player.White, null },
+            { Player.Black, null },
+        };
+
         public Piece this[int row, int col]
         {
             get { return pieces[row, col]; }
@@ -20,6 +27,14 @@ namespace ChessLogic
             Board board = new Board();
             board.AddStartPieces();
             return board;
+        }
+        public Position GetPawnSkipPosition(Player player)
+        {
+            return pawnSkipPosition[player];
+        }
+        public void SetPawnSkipPosition(Player player, Position pos)
+        {
+            pawnSkipPosition[player] = pos;
         }
         private void AddStartPieces()
         {

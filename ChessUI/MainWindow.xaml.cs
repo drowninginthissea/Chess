@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using ChessLogic;
@@ -51,6 +52,9 @@ namespace ChessUI
         }
         private void BoardGrid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            if (IsMenuOnScreen())
+                return;
+
             Point point = e.GetPosition(BoardGrid);
             Position pos = ToSquarePosition(point);
 
@@ -79,14 +83,40 @@ namespace ChessUI
             HideHighlights();
             if (moveCache.TryGetValue(pos, out Move move))
             {
-                HandleMove(move);
+                if (move.Type == MoveType.PawnPromotion)
+                {
+                    HandlePromotion(move.FromPosition, move.ToPosition);
+                }
+                else
+                {
+                    HandleMove(move);
+                }
             }
+        }
+        private void HandlePromotion(Position from, Position to)
+        {
+            pieceImages[from.Row, from.Column].Source = null;
+            pieceImages[to.Row, to.Column].Source = Images.GetImage(PieceType.Pawn, gameState.CurrentPlayer);
+
+            PromotionMenu menu = new PromotionMenu(gameState.CurrentPlayer);
+            MenuContainer.Content = menu;
+            menu.PieceSelected += piece =>
+            {
+                MenuContainer.Content = null;
+                Move promMove = new PawnPromotion(from, to, piece);
+                HandleMove(promMove);
+            };
         }
         private void HandleMove(Move move)
         {
             gameState.MakeMove(move);
             DrawBoard(gameState.Board);
             SetCursor(gameState.CurrentPlayer);
+
+            if (gameState.IsGameOver())
+            {
+                ShowGameOver();
+            }
         }
         private Position ToSquarePosition(Point point)
         {
@@ -129,6 +159,57 @@ namespace ChessUI
             {
                 Cursor = ChessCursors.BlackCursor;
             }
+        }
+        private bool IsMenuOnScreen()
+        {
+            return MenuContainer.Content != null;
+        }
+        private void ShowGameOver()
+        {
+            GameOverMenu menu = new GameOverMenu(gameState);
+            MenuContainer.Content = menu;
+
+            menu.OptionSelected += option =>
+            {
+                if (option == Option.Restart)
+                {
+                    MenuContainer.Content = null;
+                    RestartGame();
+                }
+                else
+                {
+                    Application.Current.Shutdown();
+                }
+            };
+        }
+        private void RestartGame()
+        {
+            selectedPos = null;
+            HideHighlights();
+            moveCache.Clear();
+            gameState = new GameState(Player.White, Board.Initial());
+            DrawBoard(gameState.Board);
+            SetCursor(gameState.CurrentPlayer);
+        }
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (!IsMenuOnScreen() && e.Key == Key.Escape)
+            {
+                ShowPauseMenu();
+            }
+        }
+        private void ShowPauseMenu()
+        {
+            PauseMenu menu = new PauseMenu();
+            MenuContainer.Content = menu;
+            menu.OptionSelected += option =>
+            {
+                MenuContainer.Content = null;
+                if (option == Option.Restart)
+                {
+                    RestartGame();
+                }
+            };
         }
     }
 }

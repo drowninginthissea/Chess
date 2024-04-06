@@ -10,7 +10,8 @@
         Width="600"
         Icon="Assets/icon.ico"
         WindowStartupLocation="CenterScreen"
-        Background="#101010">
+        Background="#101010"
+        KeyDown="Window_KeyDown">
     <Viewbox>
         <Grid Name="BoardGrid"
               Width="600"
@@ -28,6 +29,9 @@
                          Columns="8"
                          RenderOptions.BitmapScalingMode="HighQuality">
             </UniformGrid>
+
+            <ContentControl x:Name="MenuContainer" />
+
         </Grid>
     </Viewbox>
 </Window>
