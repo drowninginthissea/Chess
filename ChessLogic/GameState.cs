@@ -23,6 +23,7 @@
             move.Execute(Board);
             CurrentPlayer = CurrentPlayer.Opponent();
             CheckForGameOver();
+
         }
         public IEnumerable<Move> AllLegalMovesFor(Player player)
         {
@@ -42,6 +43,10 @@
                 {
                     Result = Result.Draw(EndReason.Stalemate);
                 }
+            }
+            else if (Board.InsufficientMaterial())
+            {
+                Result = Result.Draw(EndReason.InsufficientMaterial);
             }
         }
         public bool IsGameOver()

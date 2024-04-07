@@ -42,7 +42,7 @@
             <Setter Property="FontFamily"
                     Value="Segoe UI Light" />
             <Setter Property="FontSize"
-                    Value="16" />
+                    Value="18" />
             <Setter Property="BorderThickness"
                     Value="2" />
             <Setter Property="BorderBrush"

@@ -15,7 +15,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Style="{StaticResource TextStyle}"
-                       FontSize="22"
+                       FontSize="26"
                        Text="ВЫБЕРИТЕ ФИГУРУ"/>
 
             <UniformGrid Grid.Row="1"

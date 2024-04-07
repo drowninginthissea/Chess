@@ -20,14 +20,14 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Style="{StaticResource TextStyle}"
-                       FontSize="22"
+                       FontSize="26"
                        Grid.ColumnSpan="2"
                        Text="ПЕРЕЗАПУСТИТЬ ИГРУ?" />
 
             <Button Grid.Row="1"
                     Content="ПРОДОЛЖИТЬ"
                     Style="{StaticResource ButtonStyle}"
-                    Width="130"
+                    Width="150"
                     Height="35"
                     Click="Continue_Click"/>
             
@@ -35,7 +35,7 @@
                     Grid.Column="1"
                     Content="ПЕРЕЗАПУСТИТЬ"
                     Style="{StaticResource ButtonStyle}"
-                    Width="130"
+                    Width="150"
                     Height="35"
                     Click="Restart_Click" />
 

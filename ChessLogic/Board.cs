@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Runtime.CompilerServices;
 
 namespace ChessLogic
 {
@@ -100,6 +101,64 @@ namespace ChessLogic
                 copy[pos] = this[pos].Copy();
             }
             return copy;
+        }
+        public Counting CountPieces()
+        {
+            Counting count = new Counting();
+
+            foreach (Position pos in PiecePositions())
+            {
+                Piece piece = this[pos];
+                count.Increment(piece.Color, piece.Type);
+            }
+
+            return count;
+        }
+
+        public bool InsufficientMaterial()
+        {
+            Counting count = CountPieces();
+            return IsKingVsKing(count) ||
+                IsKingVsKingBishop(count) ||
+                IsKingVsKingKnight(count) ||
+                IsKingBishopVsKingBishop (count);
+        }
+
+        private static bool IsKingVsKing(Counting count)
+        {
+            return count.TotalCount == 2;
+        }
+
+        private static bool IsKingVsKingBishop(Counting count)
+        {
+            return count.TotalCount == 3 && 
+                (count.White(PieceType.Bishop) == 1 || count.Black(PieceType.Bishop) == 1);
+        }
+
+        private static bool IsKingVsKingKnight(Counting count)
+        {
+            return count.TotalCount == 3 &&
+                (count.White(PieceType.Knight) == 1 || count.Black(PieceType.Knight) == 1);
+        }
+
+        private bool IsKingBishopVsKingBishop(Counting count)
+        {
+            if (count.TotalCount != 4)
+            {
+                return false;
+            }
+            if (count.White(PieceType.Bishop) != 1 || count.Black(PieceType.Bishop) != 1)
+            {
+                return false;
+            }
+            Position wBishopPos = FindPiece(Player.White, PieceType.Bishop);
+            Position bBishopPos = FindPiece(Player.White, PieceType.Bishop);
+
+            return wBishopPos.SquareColor() == bBishopPos.SquareColor();
+        }
+        private Position FindPiece(Player color, PieceType type)
+        {
+            return PiecePositionsFor(color).First(piece => this[piece].Type == type);
         }
     }
 }

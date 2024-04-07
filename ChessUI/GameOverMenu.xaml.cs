@@ -34,9 +34,7 @@ namespace ChessUI
             {
                 EndReason.Checkmate => $"ШАХ И МАТ - {PlayerString(player)} НЕ МОГУТ ДВИГАТЬСЯ",
                 EndReason.Stalemate => $"ПАТ - {PlayerString(player)} НЕ МОГУТ ДВИГАТЬСЯ",
-                EndReason.FiftyMoveRule => $"ПРАВИЛО 50 ХОДОВ",
                 EndReason.InsufficientMaterial => $"НЕДОСТАТОК МАТЕРИАЛОВ",
-                EndReason.ThreefoldRepetition => $"ТРОЕКРАТНОЕ ПОВТОРЕНИЕ ПОЗИЦИИ",
                 _ => ""
             };
         private void Restart_Click(object sender, RoutedEventArgs e)
